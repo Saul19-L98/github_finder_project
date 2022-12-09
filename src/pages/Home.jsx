@@ -1,5 +1,5 @@
 import React from "react";
-import UserSearch from "../components/users/userSearch.jsx";
+import UserSearch from "../components/users/UserSearch.jsx";
 import UserResults from "../components/users/UserResults.jsx";
 
 function Home() {
