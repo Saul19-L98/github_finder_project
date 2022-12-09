@@ -9,14 +9,6 @@ module.exports = {
     path: path.resolve(__dirname, "dist"),
     filename: "bundle.js",
   },
-  devServer: {
-    watchFiles: ["src/**/*"],
-    port: 3000,
-    open: true,
-    hot: true,
-    compress: true,
-    historyApiFallback: true,
-  },
   module: {
     rules: [
       {
@@ -53,6 +45,8 @@ module.exports = {
       template: "./public/index.html",
       filename: "./index.html",
     }),
-    new Dotenv(),
+    new Dotenv({
+      systemvars: true,
+    }),
   ],
 };
