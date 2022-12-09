@@ -1,6 +1,6 @@
-# Webpack & Tailwind Starter
+# GIthub Finder Profiles.
 
-Build apps with Webpack and use Tailwind CSS
+Built this app with Webpack and Tailwind CSS
 
 ## Usage
 
@@ -19,10 +19,8 @@ npm run build
 ### Run the development server (:3000)
 
 ```
-npm run dev
+npm run start
 ```
-
-## ⛏🖼 Webpack & Tailwind CSS Setup
 
 ### Create your package.json
 
@@ -33,6 +31,36 @@ npm init -y
 ### Create your src folder
 
 Create a folder called **src** and add an empty **index.js** file. The code that webpack compiles goes in here including any Javascript modules and the main Tailwind file.
+
+### Dependencies used 📚
+
+```
+  "devDependencies": {
+    "@babel/core": "^7.20.5",
+    "@babel/preset-env": "^7.20.2",
+    "@babel/preset-react": "^7.18.6",
+    "autoprefixer": "^10.4.12",
+    "babel-loader": "^9.1.0",
+    "css-loader": "^6.7.1",
+    "daisyui": "^2.42.1",
+    "dotenv-webpack": "^8.0.1",
+    "html-loader": "^4.2.0",
+    "html-webpack-plugin": "^5.5.0",
+    "postcss": "^8.4.17",
+    "postcss-loader": "^7.0.1",
+    "postcss-preset-env": "^7.8.2",
+    "prop-types": "^15.8.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.7.1",
+    "react-router-dom": "^6.4.4",
+    "style-loader": "^3.3.1",
+    "tailwindcss": "^3.1.8",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0",
+    "webpack-dev-server": "^4.11.1"
+  }
+```
 
 ### Install Tailwind
 
@@ -46,22 +74,22 @@ npm i -D tailwindcss
 npm i -D webpack webpack-cli webpack-dev-server style-loader css-loader postcss postcss-loader postcss-preset-env
 ```
 
-### Create webpack.config.js in the root and add this to it...
+### Webpack dev file: webpack.config.dev.js
 
 ```
-const path = require('path')
+const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const Dotenv = require("dotenv-webpack");
 
 module.exports = {
-  mode: 'development',
-  entry: './src/index.js',
+  mode: "development",
+  entry: "./src/index.js",
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
+    path: path.resolve(__dirname, "dist"),
+    filename: "bundle.js",
   },
   devServer: {
-    static: {
-      directory: path.resolve(__dirname, 'dist'),
-    },
+    watchFiles: ["src/**/*"],
     port: 3000,
     open: true,
     hot: true,
@@ -71,21 +99,117 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.(js|jsx)$/i,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: ["@babel/preset-env"],
+          },
+        },
+      },
+      {
+        test: /\.html$/i,
+        use: { loader: "html-loader" },
+      },
+      {
         test: /\.css$/i,
-        include: path.resolve(__dirname, 'src'),
-        use: ['style-loader', 'css-loader', 'postcss-loader'],
+        include: path.resolve(__dirname, "src"),
+        use: ["style-loader", "css-loader", "postcss-loader"],
+      },
+      {
+        test: /\.(png|svg|jpg|gif)$/i,
+        type: "asset/resource",
+        generator: {
+          filename: "assets/img/[name][ext]",
+        },
       },
     ],
   },
-}
+  plugins: [
+    new HtmlWebpackPlugin({
+      inject: true,
+      template: "./public/index.html",
+      filename: "./index.html",
+    }),
+    new Dotenv({
+      systemvars: true,
+    }),
+  ],
+};
 
 ```
 
-### Add Tailwind Directives
-
-Create a **style.css** in your **src** folder and add these 3 lines
+### Webpack production file: webpack.config.dev.js
 
 ```
+const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const Dotenv = require("dotenv-webpack");
+
+module.exports = {
+  mode: "development",
+  entry: "./src/index.js",
+  output: {
+    path: path.resolve(__dirname, "dist"),
+    filename: "bundle.js",
+  },
+  devServer: {
+    watchFiles: ["src/**/*"],
+    port: 3000,
+    open: true,
+    hot: true,
+    compress: true,
+    historyApiFallback: true,
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/i,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: ["@babel/preset-env"],
+          },
+        },
+      },
+      {
+        test: /\.html$/i,
+        use: { loader: "html-loader" },
+      },
+      {
+        test: /\.css$/i,
+        include: path.resolve(__dirname, "src"),
+        use: ["style-loader", "css-loader", "postcss-loader"],
+      },
+      {
+        test: /\.(png|svg|jpg|gif)$/i,
+        type: "asset/resource",
+        generator: {
+          filename: "assets/img/[name][ext]",
+        },
+      },
+    ],
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      inject: true,
+      template: "./public/index.html",
+      filename: "./index.html",
+    }),
+    new Dotenv({
+      systemvars: true,
+    }),
+  ],
+};
+
+```
+
+### Create a **style.css** in your **src** folder and add these 3 lines
+
+```
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -97,16 +221,14 @@ Create a **style.css** in your **src** folder and add these 3 lines
 run the following command to generate your **tailwind.config.js** file and add this to it
 
 ```
+
 module.exports = {
-  content: ['./dist/*.html'],
-  theme: {
-    extend: {},
-  },
-  variants: {
-    extend: {},
-  },
-  plugins: [],
-}
+content: ["./public/**/*.html", "./src/**/*.{js,jsx}"],
+theme: {
+extend: {},
+},
+plugins: [require("daisyui")],
+};
 
 ```
 
@@ -115,36 +237,40 @@ module.exports = {
 Create a file in the root called **postcss.config.js** and add this
 
 ```
+
 const tailwindcss = require('tailwindcss');
 module.exports = {
-  plugins: [
-    'postcss-preset-env',
-    tailwindcss
-  ],
+plugins: [
+'postcss-preset-env',
+tailwindcss
+],
 };
+
 ```
 
 ### Add this line to your src/index.js
 
 ```
+
 import './style.css';
+
 ```
 
 ### Create a **dist/index.html** file and add this
 
 ```
+
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Webpack App</title>
-  </head>
-  <body>
-    <h1 class="text-4xl text-blue-700">My Webpack + Tailwind App</h1>
-    <script src="bundle.js"></script>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Github finder 🌏</title>
+</head>
+<body >
+    <div id="root"></div>
+</body>
 </html>
 ```
 
@@ -154,8 +280,10 @@ Add the following to your package.json file
 
 ```
 "scripts": {
+    "build": "webpack --config ./webpack.config.js",
+    "watch": "webpack --watch",
     "dev": "webpack serve",
-    "build": "webpack"
+    "start": "webpack-dev-server --config ./webpack.config.dev.js"
   },
 ```
 
@@ -170,7 +298,7 @@ npm run build
 To run your webpack server
 
 ```
-npm run dev
+npm run start
 ```
 
 You now have Webpack setup along with Tailwind CSS
