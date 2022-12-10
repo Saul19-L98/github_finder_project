@@ -4,6 +4,40 @@ Built this app with Webpack and Tailwind CSS
 
 ## Usage
 
+## API Reference
+
+### Get all items
+
+```
+variable (input) => user
+
+GET USERS 👨‍👨‍👦‍👦
+
+https://api.github.com/search/users?q=${user}
+
+GET USER 👨‍🚀
+
+https://api.github.com/users/${user}
+
+```
+
+The request will bring the first 30 matching results.
+| Parameter | Type | Description |
+| :-------- | :------- | :------------------------- |
+| `q` | `string` | **Required**. User name |
+
+```
+GET REPOS 📦
+
+https://api.github.com/users/${user}/repos?${params}
+
+```
+
+| Parameter  | Type     | Description                                                                                                 |
+| :--------- | :------- | :---------------------------------------------------------------------------------------------------------- |
+| `sort`     | `string` | **Required**. Required\*\*. The order of every repo according to an specification, in this case : "created" |
+| `per_page` | `int`    | **Required**. Number of repos to fetch                                                                      |
+
 ### Install dependencies
 
 ```
